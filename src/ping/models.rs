@@ -27,7 +27,7 @@ pub struct Description {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Ping {
     pub version: Version,
-    pub players: Option<Players>,
+    pub players: Players,
     pub description: Option<Description>,
     pub favicon: Option<String>,
     #[serde(rename = "previewsChat")]
