@@ -25,22 +25,22 @@ impl<T: ToSocketAddrs> RCONClient<T> {
         }
     }
 
-    pub async fn connect(&mut self) -> Result<(), Box<dyn Error>> {
+    pub async fn connect(&mut self) -> Result<(), Box<dyn Error + Send + Sync>> {
         let stream = TcpStream::connect(&self.host).await?;
         self.stream = Some(stream);
         Ok(())
     }
 
-    pub async fn login(&mut self) -> Result<RCONPacket, Box<dyn Error>> {
+    pub async fn login(&mut self) -> Result<RCONPacket, Box<dyn Error + Send + Sync>> {
         let password = &self.password.clone();
         self.send_packet(RCONPacketType::Login, password).await
     }
 
-    pub async fn send(&mut self, command: &str) -> Result<RCONPacket, Box<dyn Error>> {
+    pub async fn send(&mut self, command: &str) -> Result<RCONPacket, Box<dyn Error + Send + Sync>> {
         self.send_packet(RCONPacketType::Command, command).await
     }
 
-    pub async fn disconnect(&mut self) -> Result<(), Box<dyn Error>> {
+    pub async fn disconnect(&mut self) -> Result<(), Box<dyn Error + Send + Sync>> {
         if let Some(stream) = &mut self.stream {
             stream.shutdown().await?;
             self.stream = None;
@@ -56,7 +56,7 @@ impl<T: ToSocketAddrs> RCONClient<T> {
         packet
     }
 
-    async fn send_packet(&mut self, packet_type: RCONPacketType, payload: &str) -> Result<RCONPacket, Box<dyn Error>> {
+    async fn send_packet(&mut self, packet_type: RCONPacketType, payload: &str) -> Result<RCONPacket, Box<dyn Error + Send + Sync>> {
         let packet = self.request_packet(packet_type, payload);
         // let fake_packet = self.request_packet(EndOfResponse, "");
 

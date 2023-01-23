@@ -54,7 +54,7 @@ impl RCONPacket {
         data
     }
 
-    pub fn decode(data: &[u8]) -> Result<RCONPacket, Box<dyn Error>> {
+    pub fn decode(data: &[u8]) -> Result<RCONPacket, Box<dyn Error + Send + Sync>> {
         let length = i32::from_le_bytes([data[0], data[1], data[2], data[3]]);
         let request_id = i32::from_le_bytes([data[4], data[5], data[6], data[7]]);
         let packet_type = RCONPacketType::try_from(i32::from_le_bytes([data[8], data[9], data[10], data[11]]));

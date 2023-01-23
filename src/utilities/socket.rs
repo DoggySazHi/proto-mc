@@ -6,7 +6,7 @@ use tokio::time::timeout;
 
 pub const TIMEOUT: Duration = Duration::from_secs(5);
 
-pub async fn read_socket(stream: &mut TcpStream, mut buffer: &mut Vec<u8>) -> Result<usize, Box<dyn Error>> {
+pub async fn read_socket(stream: &mut TcpStream, mut buffer: &mut Vec<u8>) -> Result<usize, Box<dyn Error + Send + Sync>> {
     buffer.clear();
 
     loop {

@@ -9,7 +9,7 @@ use crate::utilities::varint::*;
 use crate::utilities::socket::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-pub async fn ping<A: ToSocketAddrs>(ip: A) -> Result<Ping, Box<dyn Error>> {
+pub async fn ping<A: ToSocketAddrs>(ip: A) -> Result<Ping, Box<dyn Error + Send + Sync>> {
     let mut stream = TcpStream::connect(ip).await?;
 
     let protocol_version = write_varint(760);
